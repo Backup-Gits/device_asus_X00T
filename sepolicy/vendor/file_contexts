@@ -65,3 +65,8 @@
 # Gestures
 /sys/kernel/touchpanel/dclicknode                                       u:object_r:sysfs:s0
 /sys/kernel/touchpanel/gesture_node                                     u:object_r:sysfs:s0
+
+# Sound Control
+/sys/kernel/sound_control/headphone_gain        u:object_r:sysfs_hgain:s0
+/sys/kernel/sound_control/mic_gain              u:object_r:sysfs_mgain:s0
+/sys/kernel/sound_control/earpiece_gain         u:object_r:sysfs_egain:s0
