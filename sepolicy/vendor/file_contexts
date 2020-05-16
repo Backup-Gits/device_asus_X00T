@@ -70,3 +70,6 @@
 /sys/kernel/sound_control/headphone_gain        u:object_r:sysfs_hgain:s0
 /sys/kernel/sound_control/mic_gain              u:object_r:sysfs_mgain:s0
 /sys/kernel/sound_control/earpiece_gain         u:object_r:sysfs_egain:s0
+
+# Touch HAL
+/(vendor|system/vendor)/bin/hw/vendor\.lineage\.touch@1\.0-service\.X00T      u:object_r:hal_lineage_touch_default_exec:s0
