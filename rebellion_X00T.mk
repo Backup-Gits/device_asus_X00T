@@ -22,6 +22,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/product_launched_with_o_mr1.mk
 # Inherit some common Rebellion stuff
 $(call inherit-product, vendor/rebellion/config/common.mk)
 
+# The Rebeller
+PRODUCT_PROPERTY_OVERRIDES += \
+ro.rebellion.the_rebeller = Advaith🔹Bhat
 # Bootanimation Res
 TARGET_BOOT_ANIMATION_RES := 1080
 
