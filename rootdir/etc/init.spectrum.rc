@@ -10,7 +10,7 @@ on property:sys.boot_completed=1
    # Enable Spectrum support
    setprop spectrum.support 1
    # Add kernel name
-   setprop persist.spectrum.kernel Etherious-HMP-LA.UM.8.2.r1-06300-sdm660.0
+   setprop persist.spectrum.kernel SeniXa-EAS
 
 # Balance (default profile)
 on property:persist.spectrum.profile=0
@@ -20,8 +20,11 @@ on property:persist.spectrum.profile=0
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 1000
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 10000
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 633600
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1536000
 
     # Big Cluster
@@ -29,12 +32,19 @@ on property:persist.spectrum.profile=0
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 1000
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 10000
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 633600
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1958400
 
-    # CPU Boost
-    write /sys/moduIe/cpu_boost/parameters/sched_boost_on_input 0
+    # Input-Boost
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:844800 2:691200"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 80
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 10
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 300
 
     # Power Efficient Eorkqueues
     write /sys/module/workqueue/parameters/power_efficient Y
@@ -42,9 +52,6 @@ on property:persist.spectrum.profile=0
     # CPU Enabled
     write /sys/devices/system/cpu/cpu7/online 1
     write /sys/devices/system/cpu/cpu6/online 1
-
-    # Core Control
-    write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 1
 
     # GPU Values
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
@@ -62,7 +69,7 @@ on property:persist.spectrum.profile=0
 
     # I/O Scheduler
     write /sys/block/mmcblk0/queue/read_ahead_kb 512
-    write /sys/block/mmcblk0/queue/scheduler bfq
+    write /sys/block/mmcblk0/queue/scheduler maple
 
     # Fast Charging
     write /sys/kernel/fast_charge/force_fast_charge 1
@@ -75,7 +82,10 @@ on property:persist.spectrum.profile=1
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "pwrutilx"
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 500
+    write /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/down_rate_limit_us 20000
+    write /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/iowait_boost_enable 0
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 902000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1747200
 
@@ -84,12 +94,19 @@ on property:persist.spectrum.profile=1
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "pwrutilx"
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 500
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 20000
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 1113600
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2150400
 
-    # CPU Boost
-    write /sys/moduIe/cpu_boost/parameters/sched_boost_on_input 1
+    # Input-Boost
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1056000 2:902400"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 500
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 30
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 750
 
     # Power Efficient Workqueues
     write /sys/module/workqueue/parameters/power_efficient Y
@@ -103,9 +120,6 @@ on property:persist.spectrum.profile=1
     write /sys/devices/system/cpu/cpu5/online 1
     write /sys/devices/system/cpu/cpu6/online 1
     write /sys/devices/system/cpu/cpu7/online 1
-
-    # Core Control
-    write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 2
 
     # GPU Values
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
@@ -136,8 +150,11 @@ on property:persist.spectrum.profile=2
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor alucard
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedalucard"
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedalucard/up_rate_limit_us 1500
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedalucard/down_rate_limit_us 5000
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedalucard/iowait_boost_enable 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 633600
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1401600
 
     # Big Cluster
@@ -145,12 +162,19 @@ on property:persist.spectrum.profile=2
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor alucard
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedalucard"
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedalucard/up_rate_limit_us 1500
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedalucard/down_rate_limit_us 5000
+    write /sys/devices/system/cpu/cpu4/cpufreq/schedalucard/iowait_boost_enable 0
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 1113600
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1747200
 
-    # CPU Boost
-    write /sys/moduIe/cpu_boost/parameters/sched_boost_on_input 0
+    # Input-Boost
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 0
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:0 2:0"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 0
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 0
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 0
 
     # Power Efficient Workqueues
     write /sys/module/workqueue/parameters/power_efficient Y
@@ -158,9 +182,6 @@ on property:persist.spectrum.profile=2
     # CPU Enabled
     write /sys/devices/system/cpu/cpu7/online 0
     write /sys/devices/system/cpu/cpu6/online 0
-
-    # Core Control
-    write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 1
 
     # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor powersave
@@ -191,7 +212,10 @@ on property:persist.spectrum.profile=3
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "darkutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/darkutil/up_rate_limit_us 500
+    write /sys/devices/system/cpu/cpu0/cpufreq/darkutil/down_rate_limit_us 25000
+    write /sys/devices/system/cpu/cpu0/cpufreq/darkutil/iowait_boost_enable 0
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 1113600
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1843200
 
@@ -200,12 +224,19 @@ on property:persist.spectrum.profile=3
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "darkutil"
+    write /sys/devices/system/cpu/cpu4/cpufreq/darkutil/up_rate_limit_us 500
+    write /sys/devices/system/cpu/cpu4/cpufreq/darkutil/down_rate_limit_us 25000
+    write /sys/devices/system/cpu/cpu4/cpufreq/darkutil/iowait_boost_enable 0
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 1113600
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2208000
 
-    # CPU Boost
-    write /sys/moduIe/cpu_boost/parameters/sched_boost_on_input 0
+    # Input-Boost
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1132800 2:1056000"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 1000
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 50
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 1000
 
     # Power efficient Workqueues
     write /sys/module/workqueue/parameters/power_efficient N
@@ -220,9 +251,6 @@ on property:persist.spectrum.profile=3
     write /sys/devices/system/cpu/cpu6/online 1
     write /sys/devices/system/cpu/cpu7/online 1
 
-    # Core Control
-    write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 4
-
     # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
     write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 750000000
@@ -236,7 +264,7 @@ on property:persist.spectrum.profile=3
 
     # I/O Scheduler
     write /sys/block/mmcblk0/queue/read_ahead_kb 2048
-    write /sys/block/mmcblk0/queue/scheduler noop
+    write /sys/block/mmcblk0/queue/scheduler anxiety
 
     # Brightness
     write /sys/class/leds/lcd-backlight/max_brightness 255
