@@ -20,7 +20,7 @@ on property:persist.spectrum.profile=0
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 1000
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 10000
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 0
@@ -32,7 +32,7 @@ on property:persist.spectrum.profile=0
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedutil
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 1000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 10000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
@@ -41,10 +41,18 @@ on property:persist.spectrum.profile=0
 
     # Input-Boost
     write /sys/module/cpu_boost/parameters/input_boost_enabled 1
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:844800 2:691200"
     write /sys/module/cpu_boost/parameters/input_boost_ms 80
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 10
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 300
+    write /sys/module/cpu_boost/parameters/input_boost_freq_lp 90200
+    write /sys/module/cpu_boost/parameters/input_boost_freq_hp 1536000
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_lp 1113600
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_hp 633600
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 16
+
+    # set default schedTune value for foreground/top-app (only affects EAS)
+    write /dev/stune/foreground/schedtune.boost 1
+    write /dev/stune/background/schedtune.boost 1
+    write /dev/stune/top-app/schedtune.boost 60
+    write /dev/stune/rt/schedtune.boost 3
 
     # Power Efficient Eorkqueues
     write /sys/module/workqueue/parameters/power_efficient Y
@@ -82,7 +90,7 @@ on property:persist.spectrum.profile=1
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "pwrutilx"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor pwrutilx
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 500
     write /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/down_rate_limit_us 20000
     write /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/iowait_boost_enable 0
@@ -94,7 +102,7 @@ on property:persist.spectrum.profile=1
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "pwrutilx"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor pwrutilx
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 500
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 20000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
@@ -103,10 +111,18 @@ on property:persist.spectrum.profile=1
 
     # Input-Boost
     write /sys/module/cpu_boost/parameters/input_boost_enabled 1
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1056000 2:902400"
-    write /sys/module/cpu_boost/parameters/input_boost_ms 500
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 30
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 750
+    write /sys/module/cpu_boost/parameters/input_boost_ms 100
+    write /sys/module/cpu_boost/parameters/input_boost_freq_lp 1401600
+    write /sys/module/cpu_boost/parameters/input_boost_freq_hp 1843200
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_lp 1401600
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_hp 633600
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 16
+
+    # set default schedTune value for foreground/top-app (only affects EAS)
+    write /dev/stune/foreground/schedtune.boost 10
+    write /dev/stune/background/schedtune.boost 12
+    write /dev/stune/top-app/schedtune.boost 100
+    write /dev/stune/rt/schedtune.boost 5
 
     # Power Efficient Workqueues
     write /sys/module/workqueue/parameters/power_efficient Y
@@ -150,7 +166,7 @@ on property:persist.spectrum.profile=2
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedalucard"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedalucard
     write /sys/devices/system/cpu/cpu0/cpufreq/schedalucard/up_rate_limit_us 1500
     write /sys/devices/system/cpu/cpu0/cpufreq/schedalucard/down_rate_limit_us 5000
     write /sys/devices/system/cpu/cpu0/cpufreq/schedalucard/iowait_boost_enable 0
@@ -162,7 +178,7 @@ on property:persist.spectrum.profile=2
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedalucard"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedalucard
     write /sys/devices/system/cpu/cpu4/cpufreq/schedalucard/up_rate_limit_us 1500
     write /sys/devices/system/cpu/cpu4/cpufreq/schedalucard/down_rate_limit_us 5000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedalucard/iowait_boost_enable 0
@@ -170,11 +186,19 @@ on property:persist.spectrum.profile=2
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1747200
 
     # Input-Boost
-    write /sys/module/cpu_boost/parameters/input_boost_enabled 0
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:0 2:0"
-    write /sys/module/cpu_boost/parameters/input_boost_ms 0
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 0
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 0
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/input_boost_ms 20
+    write /sys/module/cpu_boost/parameters/input_boost_freq_lp 633600
+    write /sys/module/cpu_boost/parameters/input_boost_freq_hp 902400
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_lp 902400
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_hp 633600
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 10
+
+    # set default schedTune value for foreground/top-app (only affects EAS)
+    write /dev/stune/foreground/schedtune.boost 1
+    write /dev/stune/background/schedtune.boost 1
+    write /dev/stune/top-app/schedtune.boost 1
+    write /dev/stune/rt/schedtune.boost 5
 
     # Power Efficient Workqueues
     write /sys/module/workqueue/parameters/power_efficient Y
@@ -212,7 +236,7 @@ on property:persist.spectrum.profile=3
     chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "darkutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor darkutil
     write /sys/devices/system/cpu/cpu0/cpufreq/darkutil/up_rate_limit_us 500
     write /sys/devices/system/cpu/cpu0/cpufreq/darkutil/down_rate_limit_us 25000
     write /sys/devices/system/cpu/cpu0/cpufreq/darkutil/iowait_boost_enable 0
@@ -224,7 +248,7 @@ on property:persist.spectrum.profile=3
     chmod 0644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
     # CPU Values
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "darkutil"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor darkutil
     write /sys/devices/system/cpu/cpu4/cpufreq/darkutil/up_rate_limit_us 500
     write /sys/devices/system/cpu/cpu4/cpufreq/darkutil/down_rate_limit_us 25000
     write /sys/devices/system/cpu/cpu4/cpufreq/darkutil/iowait_boost_enable 0
@@ -233,10 +257,18 @@ on property:persist.spectrum.profile=3
 
     # Input-Boost
     write /sys/module/cpu_boost/parameters/input_boost_enabled 1
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1132800 2:1056000"
-    write /sys/module/cpu_boost/parameters/input_boost_ms 1000
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 50
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 1000
+    write /sys/module/cpu_boost/parameters/input_boost_ms 120
+    write /sys/module/cpu_boost/parameters/input_boost_freq_lp 1536000
+    write /sys/module/cpu_boost/parameters/input_boost_freq_hp 2208000
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_lp 1747200
+    write /sys/module/cpu_boost/parameters/input_boost_min_freq_hp 633600
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 10
+
+    # set default schedTune value for foreground/top-app (only affects EAS)
+    write /dev/stune/foreground/schedtune.boost 100
+    write /dev/stune/background/schedtune.boost 50
+    write /dev/stune/top-app/schedtune.boost 1
+    write /dev/stune/rt/schedtune.boost 50
 
     # Power efficient Workqueues
     write /sys/module/workqueue/parameters/power_efficient N
